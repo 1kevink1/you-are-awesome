@@ -29,11 +29,40 @@ const asyncIncrementor = () => {
         return resolve(count2);
     })
 };
-const createIncrementer = () => {};
+const createIncrementer = () => {
+    return {
+        i: 0,
+        next() {
+            return { value: ++this.i }
+        },
+        [Symbol.iterator]() {
+            return {
+                next: () => {
+                    return this.next()
+                },
+            };
+        }
+    };
+};
 
 // return same argument not earlier than in one second, and not later, than in two
-const returnBackInSecond = () => {};
-const getDeepPropertiesCount = () => {};
+const returnBackInSecond = (param) => {
+    return new Promise((resolve) => {
+        setTimeout(()=>{
+            resolve(param)
+        },1001)
+    })
+};
+const getDeepPropertiesCount = (object) => {
+    var properties = Object.getOwnPropertyNames(object);
+    var count = properties.length;
+    properties.forEach(property => {
+        if (Object.getOwnPropertyNames(object[property]).length > 0){
+            count = count + getDeepPropertiesCount(object[property]);
+        }
+    })
+    return count;
+};
 const createSerializedObject = () => {
     return null;
 };
